@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itsource.org.mapper.ShopMapper">
+   <!-- 添加-->
+    <insert id="save" parameterType="Shop" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO t_shop(name,tel,registerTime,address,logo,state,admin_id)
+        VALUES (#{name},#{tel},#{registerTime},#{address},#{logo},#{state},#{employee.id})
+    </insert>
+    <!--修改-->
+    <update id="update" parameterType="Shop">
+        UPDATE t_shop
+        SET name=#{name},tel=#{tel},registerTime=#{registerTime},address=#{address},logo=#{logo},state=#{state},admin_id=#{employee.id}
+        WHERE id=#{id}
+    </update>
+    <!--删除-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_shop WHERE id=#{id}
+    </delete>
+
+    <select id="selectById" resultType="Shop" parameterType="long">
+        SELECT * FROM t_shop WHERE id=#{id}
+
+    </select>
+
+    <select id="selectAll" resultType="Shop">
+        SELECT s.*,e.username FROM t_shop s
+        LEFT JOIN t_employee e on s.admin_id=e.id
+    </select>
+   <!-- 查询总条数-->
+    <select id="total" resultType="long" parameterType="departmentQuery">
+        SELECT COUNT(*) FROM t_shop
+        <include refid="whereSql"></include>
+    </select>
+
+    <select id="paging" resultMap="shopMap" parameterType="departmentQuery">
+        SELECT s.*,e.username FROM t_shop s
+        LEFT JOIN t_employee e on s.admin_id=e.id
+        <include refid="whereSql"></include>
+        limit #{start},#{pageSize}
+    </select>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keywords!=null and keywords!=''">
+                AND name LIKE concat('%',#{keywords},'%')
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="shopMap" type="shop">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="tel" column="tel"></result>
+        <result property="registerTime" column="registerTime"></result>
+        <result property="address" column="address"></result>
+        <result property="logo" column="logo"></result>
+        <result property="state" column="state"></result>
+
+        <association property="employee" javaType="employee">
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+        </association>
+    </resultMap>
+</mapper>

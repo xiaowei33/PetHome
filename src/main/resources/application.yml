@@ -1,0 +1,28 @@
+server:
+  port: 80
+spring:
+  datasource:
+    password: 123456
+    username: root
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pethome?useUnicode=true&characterEncoding=UTF-8
+  mail:
+    host: smtp.qq.com
+    username: 528532329@qq.com
+    password: lvkfsicrdtspcaia
+    properties:
+      mail:
+        smtp:
+          auth: true
+      #SMTP加密方式:连接到一个TLS保护连接
+          starttls:
+            enable: true
+            required: true
+
+
+mybatis:
+  type-aliases-package: cn.itsource.org.domain,cn.itsource.org.query,cn.itsource.user.domain,cn.itsource.user.query
+logging:
+  level:
+    cn.itsource : debug
+
