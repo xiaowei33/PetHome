@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -29,5 +31,16 @@ public class UserController {
     @PostMapping("/login")
     public AjaxResult login(@RequestBody User user){
         return userService.login(user);
+    }
+
+    @PostMapping("/wxLogin")
+    public AjaxResult wxLogin(@RequestBody Map<String,String> params, HttpServletResponse response){
+        System.out.println("111111111111111111111111");
+        return userService.wxLogin(params,response);
+    }
+
+    @PostMapping("/binder")
+    public AjaxResult binder(@RequestBody Map<String,String> params){
+        return userService.binder(params);
     }
 }

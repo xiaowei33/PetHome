@@ -4,8 +4,11 @@ import cn.itsource.basic.mapper.BaseMapper;
 import cn.itsource.basic.query.BaseQuery;
 import cn.itsource.basic.service.impl.BaseServiceImpl;
 import cn.itsource.basic.util.*;
+import cn.itsource.user.constants.WxConstants;
 import cn.itsource.user.domain.User;
+import cn.itsource.user.domain.WxUser;
 import cn.itsource.user.mapper.UserMapper;
+import cn.itsource.user.mapper.WxUserMapper;
 import cn.itsource.user.query.UserDto;
 import cn.itsource.user.service.IUserService;
 import cn.itsource.user.service.IVerifycodeService;
@@ -14,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.*;
 
@@ -23,6 +27,9 @@ public class UserServiceImpl implements IUserService {
     private UserMapper mapper;
     @Autowired
     private IVerifycodeService verifycodeService;
+    @Autowired
+    private WxUserMapper wxUserMapper;
+
     @Override
     public void save(User user) {
         mapper.save(user);
@@ -117,6 +124,105 @@ public class UserServiceImpl implements IUserService {
         resultObj.put("uToken",uToken);
         resultObj.put("user",user1);
         return AjaxResult.me().setResultObj(resultObj);
+    }
+
+    //微信登录
+    @Override
+    public AjaxResult wxLogin(Map<String, String> params, HttpServletResponse response) {
+        //获取参数
+        String code = params.get("code");
+        System.out.println(code);
+        String binderUrl = params.get("binderUrl");
+        System.out.println(binderUrl);
+        //发送请求获取openId
+        String url = WxConstants.GET_OPENID_URL.replace("APPID", WxConstants.APPID).replace("SECRET",WxConstants.SECURITY).replace("CODE",code);
+        //获取里面的json字符串
+        String jsonStr = HttpClientUtils.httpGet(url);
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+        String accessToken = jsonObject.getString("access_token");
+        String openid = jsonObject.getString("openid");
+        //判断用户是否以进行绑定，绑定了直接免密登录
+        WxUser wxUser = wxUserMapper.loadByOpenId(openid);
+        if (wxUser!=null && wxUser.getUser_id()!=null){
+            User user = mapper.loadById(wxUser.getUser_id());
+            //返回登录成功，在redis存放token，返回对象为token和当前登录用户
+            //在redis存放token
+            String uToken = UUID.randomUUID().toString();
+           //设置存放的key和过期时间
+           RedisUtils.INSTANCE.set(uToken,JSONObject.toJSONString(user),30*60);
+           //查询后返回的对象为token和当前登录的微信用户
+            Map<String, Object> resultObj = new HashMap<>();
+            resultObj.put("uToken",uToken);
+            resultObj.put("user",user);
+            return  AjaxResult.me().setResultObj(resultObj);
+        }else {
+            //未绑定，跳转到绑定页面
+            //设置url地址
+            binderUrl=binderUrl+"?access_token="+accessToken+"&openId="+openid;
+            return AjaxResult.me().setSuccess(false).setMessage("binder").setResultObj(binderUrl);
+        }
+
+    }
+    //微信绑定
+    @Override
+    public AjaxResult binder(Map<String, String> params) {
+        //获取参数
+        String username = params.get("username");
+        String password = params.get("password");
+        String accessToken = params.get("accessToken");
+        String openId = params.get("openId");
+        //获取微信用户
+        String url = WxConstants.GET_WXUSER_URL.replace("ACCESS_TOKEN", accessToken)
+                .replace("OPENID", openId);
+        String jsonStr = HttpClientUtils.httpGet(url);
+        //将获取的资源转化为wxuser对象
+        WxUser wxUser = jsonStr2WxUser(jsonStr);
+        //判断用户是否存在
+        User user = mapper.loadByUsername(username);
+        //有就绑定，没有就创建
+        if (user!=null){
+            if (!MD5Utils.encrypByMd5(password+user.getSalt()).equals(user.getPassword())){
+                return AjaxResult.me().setSuccess(false).setMessage("用户名或密码错误！");
+            }
+        }else {
+            //不存在就创建用户
+            User user1 = new User();
+            user1.setUsername(username);
+            String salt = StrUtils.getComplexRandomString(32);
+            user1.setSalt(salt);
+            String securityPwd = MD5Utils.encrypByMd5(password+salt);
+            user1.setPassword(securityPwd);
+            user1.setState(1);
+            user1.setCreatetime(new Date());
+            user1.setHeadImg(wxUser.getHeadimgurl());
+            mapper.save(user1);
+            user = user1;
+        }
+        wxUser.setUser_id(user.getId());
+        wxUserMapper.save(wxUser);
+
+        //免密登录 // 返回登录成功，在redis存放token，返回对象为token和当前登录用户
+        // 在redis存放token
+        String uToken = UUID.randomUUID().toString();
+        // 在redis存放java对象使用json格式的字符串，获取到json格式字符串可以换为java对象
+        RedisUtils.INSTANCE.set(uToken, JSONObject.toJSONString(user),30*60);
+        //返回对象为token和当前登录用户
+        Map<String, Object> resultObj = new HashMap<>();
+        resultObj.put("uToken",uToken);
+        resultObj.put("user",user);
+        return AjaxResult.me().setResultObj(resultObj);
+    }
+
+    private WxUser jsonStr2WxUser(String jsonStr) {
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+        WxUser wxUser = new WxUser();
+        wxUser.setOpenid(jsonObject.getString("openid"));
+        wxUser.setNickname(jsonObject.getString("nickname"));
+        wxUser.setSex(jsonObject.getInteger("sex"));
+        wxUser.setAddress(null);
+        wxUser.setHeadimgurl(jsonObject.getString("headimgurl"));
+        wxUser.setUnionid(jsonObject.getString("unionid"));
+        return wxUser;
     }
 
     //将UserDto转成user
