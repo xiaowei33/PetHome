@@ -213,6 +213,7 @@ public class UserServiceImpl implements IUserService {
         resultObj.put("user",user);
         return AjaxResult.me().setResultObj(resultObj);
     }
+<<<<<<< HEAD
     //amail注册
     @Override
     public AjaxResult emailsave(UserEmail userEmail) {
@@ -235,6 +236,8 @@ public class UserServiceImpl implements IUserService {
         return AjaxResult.me();
     }
 
+=======
+>>>>>>> dfe809feaf052bb41c9ab5e24ef4ef9af81827a2
 
     private WxUser jsonStr2WxUser(String jsonStr) {
         JSONObject jsonObject = JSONObject.parseObject(jsonStr);
@@ -248,6 +251,7 @@ public class UserServiceImpl implements IUserService {
         return wxUser;
     }
 
+<<<<<<< HEAD
     private User initUserEamil(UserEmail userEmail){
         User user = new User();
         user.setUsername(userEmail.getEmail());
@@ -262,6 +266,8 @@ public class UserServiceImpl implements IUserService {
         user.setSalt(salt);
         return user;
     }
+=======
+>>>>>>> dfe809feaf052bb41c9ab5e24ef4ef9af81827a2
     //将UserDto转成user
     private User initUser(UserDto userDto) {
         User user = new User();
