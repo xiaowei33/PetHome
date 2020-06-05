@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itsource.org.mapper.DepartmentMapper">
+   <!-- 添加-->
+    <insert id="save" parameterType="Department" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO t_department(sn,name,dirPath,state) VALUES (#{sn},#{name},#{dirPath},#{state})
+    </insert>
+    <!--修改-->
+    <update id="update" parameterType="Department">
+        UPDATE t_department SET sn=#{sn},name=#{name},dirPath=#{dirPath},state=#{state} WHERE id=#{id}
+    </update>
+    <!--删除-->
+    <delete id="remove" parameterType="long">
+        DELETE FROM t_department WHERE id=#{id}
+    </delete>
+    <!--查询-->
+    <select id="selectById" parameterType="long" resultType="Department">
+        SELECT * FROM t_department WHERE id=#{id}
+    </select>
+    <select id="selectAll" resultType="Department">
+        SELECT * FROM t_department
+    </select>
+    <!--查询总条数-->
+    <select id="total" resultType="long" parameterType="departmentQuery">
+        SELECT COUNT(*) FROM t_department c
+        LEFT JOIN t_department p ON c.parent_id= p.id
+        LEFT JOIN t_employee e ON c.manager_id=e.id
+        <include refid="whereSql"></include>
+    </select>
+
+    <select id="paging" resultMap="departmentMap" parameterType="departmentQuery">
+        SELECT c.*,p.id pid,p.name pname, e.id eid,e.username FROM t_department c
+        LEFT JOIN t_department p ON c.parent_id= p.id
+        LEFT JOIN t_employee e ON c.manager_id=e.id
+        <include refid="whereSql"></include>
+        limit #{start},#{pageSize}
+    </select>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keywords!=null and keywords!=''">
+                AND c.name LIKE concat('%',#{keywords},'%')
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="departmentMap" type="department">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="dirPath" column="dirPath"></result>
+        <result property="sn" column="sn"></result>
+        <result property="state" column="state"></result>
+        <association property="parent" javaType="department">
+            <id property="id" column="pid"></id>
+            <result property="name" column="pname"></result>
+        </association>
+        <association property="emp" javaType="employee">
+            <id property="id" column="eid"></id>
+            <result property="username" column="username"></result>
+        </association>
+    </resultMap>
+</mapper>
