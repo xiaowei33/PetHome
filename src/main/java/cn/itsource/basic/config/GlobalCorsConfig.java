@@ -13,12 +13,14 @@ public class GlobalCorsConfig {
     public CorsFilter corsFilter() {
         //1.添加CORS配置信息
         CorsConfiguration config = new CorsConfiguration();
-        //1) 允许的域,不要写*，否则cookie就无法使用了
+        //允许的域,不要写*，否则cookie就无法使用了
         config.addAllowedOrigin("http://127.0.0.1");
+        config.addAllowedOrigin("http://localhost");
         config.addAllowedOrigin("http://localhost:8081");
         config.addAllowedOrigin("http://127.0.0.1:8081");
-        config.addAllowedOrigin("http://localhost:8082");
-        config.addAllowedOrigin("http://127.0.0.1:8082");
+        config.addAllowedOrigin("http://localhost:80");
+        config.addAllowedOrigin("http://127.0.0.1:80");
+        config.addAllowedOrigin("http://bugtracker.itsource.cn");
 
         //2) 是否发送Cookie信息
         config.setAllowCredentials(true);

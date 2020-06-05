@@ -20,4 +20,11 @@ public class VerifycodeController {
     public AjaxResult sendSmsCode(@RequestBody Map<String,String> params){
     return verifycodeService.sendSmsCode(params);
     }
+    @PostMapping("/sendSmsCodeemail")
+    public AjaxResult sendSmsCodeemail(@RequestBody Map<String,String> params){
+       // System.out.println(params.toString());
+        //"email":"XXXX@QQ.COM"
+        return verifycodeService.sendSmsCodeemail(params);
+    }
+
 }
