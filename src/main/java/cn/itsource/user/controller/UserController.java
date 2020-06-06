@@ -42,7 +42,15 @@ public class UserController {
 
     @PostMapping("/wxLogin")
     public AjaxResult wxLogin(@RequestBody Map<String,String> params, HttpServletResponse response){
+<<<<<<< HEAD
         //System.out.println("111111111111111111111111");
+=======
+<<<<<<< HEAD
+        //System.out.println("111111111111111111111111");
+=======
+        System.out.println("111111111111111111111111");
+>>>>>>> dfe809feaf052bb41c9ab5e24ef4ef9af81827a2
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
         return userService.wxLogin(params,response);
     }
 

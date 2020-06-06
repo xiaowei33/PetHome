@@ -4,11 +4,14 @@
 
 <mapper namespace="cn.itsource.user.mapper.UserMapper">
 
+<<<<<<< HEAD
     <!--邮箱查询-->
     <select id="loadByEmail" parameterType="user" resultType="user">
         SELECT * FROM t_user WHERE email=#{email}
     </select>
 
+=======
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
     <!--邮件保存-->
     <insert id="saveemail" parameterType="user">
         INSERT INTO t_user(username, password, age, email, createtime, phone, headImg, state,salt)

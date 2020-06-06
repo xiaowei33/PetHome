@@ -213,12 +213,17 @@ public class UserServiceImpl implements IUserService {
         resultObj.put("user",user);
         return AjaxResult.me().setResultObj(resultObj);
     }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
     //amail注册
     @Override
     public AjaxResult emailsave(UserEmail userEmail) {
         //前台数据验证
         if (userEmail.getEmail()==null)
             return AjaxResult.me().setSuccess(false).setMessage("请输入email");
+<<<<<<< HEAD
         if (!userEmail.getCode().equals(verifycodeService.getRegisterSmsCodeemail(userEmail.getEmail())))
             return AjaxResult.me().setSuccess(false).setMessage("验证码错误");
         if (!userEmail.getPassword().equals(userEmail.getPasswordRepeat()))
@@ -228,12 +233,29 @@ public class UserServiceImpl implements IUserService {
         if (user3!=null)
             return AjaxResult.me().setSuccess(false).setMessage("该邮箱已被注册");
         //对存入的数据进行处理
+=======
+        if (!userEmail.getCode().equals(verifycodeService.getRegisterSmsCodeemail(userEmail.getEmail()))){
+
+            System.out.println(verifycodeService.getRegisterSmsCodeemail(userEmail.getCode())+"获取redis");
+            return AjaxResult.me().setSuccess(false).setMessage("验证码错误");
+        }
+        if (!userEmail.getPassword().equals(userEmail.getPasswordRepeat()))
+            return AjaxResult.me().setSuccess(false).setMessage("密码不一致");
+
+        //对存入的数据进行处理
+
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
         User user1 = initUserEamil(userEmail);
         //保存
         mapper.saveemail(user1);
         return AjaxResult.me();
     }
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> dfe809feaf052bb41c9ab5e24ef4ef9af81827a2
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
 
     private WxUser jsonStr2WxUser(String jsonStr) {
         JSONObject jsonObject = JSONObject.parseObject(jsonStr);
@@ -247,6 +269,10 @@ public class UserServiceImpl implements IUserService {
         return wxUser;
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
     private User initUserEamil(UserEmail userEmail){
         User user = new User();
         user.setUsername(userEmail.getEmail());
@@ -261,6 +287,11 @@ public class UserServiceImpl implements IUserService {
         user.setSalt(salt);
         return user;
     }
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> dfe809feaf052bb41c9ab5e24ef4ef9af81827a2
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
     //将UserDto转成user
     private User initUser(UserDto userDto) {
         User user = new User();

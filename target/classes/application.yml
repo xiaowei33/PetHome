@@ -21,7 +21,11 @@ spring:
 
 
 mybatis:
+<<<<<<< HEAD
   type-aliases-package: cn.itsource.org.domain,cn.itsource.org.query,cn.itsource.user.domain,cn.itsource.user.query,cn.itsource.product.domain,cn.itsource.product.query
+=======
+  type-aliases-package: cn.itsource.org.domain,cn.itsource.org.query,cn.itsource.user.domain,cn.itsource.user.query
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
 logging:
   level:
     cn.itsource : debug

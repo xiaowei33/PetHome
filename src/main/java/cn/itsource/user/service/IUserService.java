@@ -29,6 +29,14 @@ public interface IUserService {
     AjaxResult wxLogin(Map<String, String> params, HttpServletResponse response);
     //微信绑定
     AjaxResult binder(Map<String, String> params);
+<<<<<<< HEAD
     //email注册
     AjaxResult emailsave(UserEmail userEmail);
+=======
+<<<<<<< HEAD
+    //email注册
+    AjaxResult emailsave(UserEmail userEmail);
+=======
+>>>>>>> dfe809feaf052bb41c9ab5e24ef4ef9af81827a2
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
 }

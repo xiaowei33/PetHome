@@ -23,6 +23,9 @@ public interface UserMapper{
     User loadByUsername(String username);
     //邮件注册保存
     void saveemail(User user1);
+<<<<<<< HEAD
     //邮箱查询
     User loadByEmail(String email);
+=======
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
 }

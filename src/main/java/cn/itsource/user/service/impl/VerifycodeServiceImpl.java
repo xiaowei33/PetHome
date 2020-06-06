@@ -77,7 +77,11 @@ public class VerifycodeServiceImpl implements IVerifycodeService {
         System.out.println(email);
         //校验邮箱
         if (null==email || "".equals(email)){
+<<<<<<< HEAD
             return AjaxResult.me().setSuccess(false).setMessage("请输入邮箱");
+=======
+            return AjaxResult.me().setSuccess(false).setMessage("请输入正确的邮箱");
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
         }
         String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
         Pattern p = Pattern.compile(regEx1);
@@ -85,9 +89,12 @@ public class VerifycodeServiceImpl implements IVerifycodeService {
         if(!m.matches()){
             return AjaxResult.me().setSuccess(false).setMessage("请输入正确的邮箱");
         }
+<<<<<<< HEAD
         //查询数据库里面是否存在
 
 
+=======
+>>>>>>> 1292f466079b1d5a0d1df4f431ddacc4738f6b6e
 
         ///设置key值，将名称抽取到常量类里面
         String Key = SmsConstants.REGISTER_CODE_PREFIX + email;
