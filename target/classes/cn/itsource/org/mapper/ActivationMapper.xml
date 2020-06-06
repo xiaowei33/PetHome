@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itsource.org.mapper.ActivationMapper">
+
+    <!--修改-->
+    <update id="update" parameterType="Shop">
+        UPDATE t_shop
+        SET state=#{state}
+        WHERE id=#{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_shop WHERE id=#{id}
+    </delete>
+
+    <!--查询邮件-->
+
+
+    <select id="selectAll" resultType="Shop">
+        SELECT s.*,e.username FROM t_shop s
+        LEFT JOIN t_employee e on s.admin_id=e.id
+    </select>
+   <!-- 查询总条数-->
+    <select id="total" resultType="long" parameterType="departmentQuery">
+        SELECT COUNT(*) FROM t_shop
+        WHERE state = 1
+        <include refid="whereSql"></include>
+
+    </select>
+
+    <select id="paging" resultMap="EmployeeMap" parameterType="departmentQuery">
+        SELECT s.*,e.username FROM t_shop s
+        LEFT JOIN t_employee e on s.admin_id=e.id
+        <include refid="whereSql"></include>
+        WHERE s.state = 1
+        limit #{start},#{pageSize}
+
+    </select>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keywords!=null and keywords!=''">
+                AND name LIKE concat('%',#{keywords},'%')
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="EmployeeMap" type="shop">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="tel" column="tel"></result>
+        <result property="registerTime" column="registerTime"></result>
+        <result property="address" column="address"></result>
+        <result property="logo" column="logo"></result>
+        <result property="state" column="state"></result>
+        <association property="employee" javaType="employee">
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+            <result property="state" column="state"></result>
+        </association>
+    </resultMap>
+</mapper>

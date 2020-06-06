@@ -1,14 +1,14 @@
 package cn.itsource.user.mapper;
 
-import cn.itsource.basic.mapper.BaseMapper;
 import cn.itsource.basic.query.BaseQuery;
 import cn.itsource.user.domain.User;
+import cn.itsource.user.domain.WxUser;
 
 import java.io.Serializable;
 import java.util.List;
 
-public interface UserMapper{
-    void save(User user);
+public interface WxUserMapper {
+    void save(WxUser wxUser);
     void update(User user);
     void remove(Serializable id);
     User loadById(Serializable id);
@@ -18,11 +18,6 @@ public interface UserMapper{
     Long queryCount(BaseQuery query);
     //查询数据
     List<User> queryData(BaseQuery query);
-    //通过电话查询
-    User loadByphone(String phone);
-    User loadByUsername(String username);
-    //邮件注册保存
-    void saveemail(User user1);
-    //邮箱查询
-    User loadByEmail(String email);
+    //查询表里面是否由该openid
+    WxUser loadByOpenId(String openid);
 }

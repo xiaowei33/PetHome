@@ -20,7 +20,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //配置放行资源
         String uri = request.getRequestURI();
-        if (CollectUtils.contain(uri,Arrays.asList("/user/login","/logout","/dfs","/user/phoneRegister","/verifycode/sendSmsCode","/user/register/phone")))
+        if (CollectUtils.contain(uri,Arrays.asList("/user/login","/logout","/dfs","/user/phoneRegister","/verifycode/sendSmsCode",
+                                                    "/user/register/phone","/user/wxLogin","/user/binder","/user/register/email",
+                                                    "/department","/activation","/emp","/shop","/product")))
             return true;
         //判断请求头里面是否携带U-TOKEN A-TOKEN,如果没有携带返回登录
         String uToken = request.getHeader("U-TOKEN");

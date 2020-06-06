@@ -10,4 +10,8 @@ public interface IVerifycodeService {
     AjaxResult sendSmsCode(Map<String, String> params);
     //获取验证码
     String getRegisterSmsCode(String phone);
+    //发送邮件
+    AjaxResult sendSmsCodeemail(Map<String, String> params);
+    //获取验证码
+    String getRegisterSmsCodeemail(String email);
 }

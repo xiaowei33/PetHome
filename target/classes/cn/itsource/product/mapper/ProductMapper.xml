@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itsource.product.mapper.ProductMapper">
+
+    <update id="onsale" parameterType="map">
+        update t_product set onsaletime = #{onsaleTime},state = #{state} where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="offsale" parameterType="map">
+        update t_product set onsaletime = #{onsaleTime},state = #{state} where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--批量删除-->
+    <delete id="ids" parameterType="long">
+        DELETE FROM t_product WHERE id =#{id}
+    </delete>
+    <!--删除-->
+    <delete id="remove" parameterType="long">
+        DELETE FROM t_product WHERE id=#{id}
+    </delete>
+    <!--添加-->
+    <insert id="save" parameterType="product" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO t_product (name, resources, saleprice, offsaletime, onsaletime, state, costprice, createtime, salecount)
+        VALUES(#{name},#{resources},#{saleprice},#{offsaletime}, #{onsaletime}, #{state}, #{costprice}, #{createtime}, #{salecount})
+    </insert>
+   <!-- 修改-->
+    <update id="update" parameterType="product" >
+        UPDATE t_product SET name=#{name}, resources= #{resources},saleprice= #{saleprice},offsaletime= #{offsaletime}, onsaletime= #{onsaletime}, state= #{state}, salecount= #{salecount},costprice= #{costprice}, createtime= #{createtime}
+        WHERE id = #{id}
+    </update>
+
+    <!--根据id查询-->
+    <select id="loadById" parameterType="long" resultType="product">
+        SELECT * FROM t_product WHERE id=#{id}
+    </select>
+    <!--分页查询-->
+    <select id="queryCount" parameterType="productQuery" resultType="long">
+        SELECT COUNT(*) FROM t_product
+    </select>
+    <select id="queryData" parameterType="productQuery" resultType="Product">
+        SELECT * FROM t_product p
+        LEFT JOIN t_product_detail pd ON p.id=pd.product_id
+    </select>
+</mapper>

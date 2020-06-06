@@ -56,7 +56,7 @@ public class DepartmentController {
     }
     @PostMapping
     public PageList<Department> paging(@RequestBody DepartmentQuery query){
-       // System.out.println(query);
+        System.out.println(query);
         return departmentService.paging(query);
     }
 

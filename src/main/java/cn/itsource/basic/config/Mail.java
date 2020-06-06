@@ -43,4 +43,19 @@ public class Mail {
         helper.setTo(email);
         mailSender.send(mimeMessage);
     }
+    //email注册
+    public void registeremail(String email,String code) throws Exception {
+        //创建复杂邮件对象
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        //发送复杂邮件的工具类
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true,"utf-8");
+        helper.setFrom("528532329@qq.com");
+        helper.setSubject("注册通知");
+        helper.setText(" <h1>欢迎注册宠物之家</h1>\n" +
+                "        <span>你的注册码是</span>\n"+ code,true);
+        helper.setTo(email);
+        mailSender.send(mimeMessage);
+    }
+
+
 }

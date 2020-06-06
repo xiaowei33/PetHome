@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.itsource.org.mapper.EmpMapper">
+   <!-- 添加
+        useGeneratedKeys="true" keyProperty="id" keyColumn="id" 返回主键id
+   -->
+    <insert id="save" parameterType="Employee" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO t_employee(username,email,phone,password,age,state,department_id)
+        VALUES (#{username},#{email},#{phone},#{password},#{age},#{state},#{department.id})
+    </insert>
+    <!--修改-->
+    <update id="update" parameterType="Employee">
+        UPDATE t_employee
+        SET username=#{username},email=#{email},phone=#{phone},password=#{password},age=#{age},state=#{state},department_id=#{department.id}
+        WHERE id=#{id}
+    </update>
+    <update id="updatename" parameterType="Employee">
+        UPDATE t_employee
+        SET state=#{state}
+        WHERE username=#{username}
+    </update>
+
+    <!--删除-->
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_employee WHERE id=#{id}
+    </delete>
+
+    <select id="selectByName" resultType="Employee">
+        SELECT * FROM t_employee WHERE username=#{username}
+
+    </select>
+
+    <select id="selectAll" resultType="Employee">
+        SELECT e.*,d.name FROM t_employee e
+        LEFT JOIN t_department d on e.department_id=d.id
+    </select>
+   <!-- 查询总条数-->
+    <select id="total" resultType="long" parameterType="departmentQuery">
+        SELECT COUNT(*) FROM t_employee
+        <include refid="whereSql"></include>
+    </select>
+
+    <select id="paging" resultMap="EmployeeMap" parameterType="departmentQuery">
+        SELECT e.*,d.name FROM t_employee e
+        LEFT JOIN t_department d on e.department_id=d.id
+        <include refid="whereSql"></include>
+        limit #{start},#{pageSize}
+    </select>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keywords!=null and keywords!=''">
+                AND username LIKE concat('%',#{keywords},'%')
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="EmployeeMap" type="employee">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="email" column="email"></result>
+        <result property="phone" column="phone"></result>
+        <result property="password" column="password"></result>
+        <result property="age" column="age"></result>
+        <result property="state" column="state"></result>
+        <association property="department" javaType="department">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+</mapper>
